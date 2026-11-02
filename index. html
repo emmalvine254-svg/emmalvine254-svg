@@ -1,0 +1,671 @@
+Here is the HTML code for a Jumia-inspired supermarket jobs menu UI. It's a clean, interactive dashboard for browsing job listings.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jumia · supermarket jobs</title>
+  <!-- Font Awesome icons (clean, recognizable) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f3f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    /* main card – mimics a Jumia menu panel */
+    .jumia-menu {
+      width: 100%;
+      max-width: 540px;
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.12), 0 8px 18px -6px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 107, 0, 0.08);
+    }
+
+    /* Jumia-style header with orange accent */
+    .menu-header {
+      background: linear-gradient(98deg, #fe6a00 0%, #f25800 100%);
+      padding: 22px 24px 18px 24px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-left i {
+      font-size: 26px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .header-left h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-left h1 span {
+      font-weight: 400;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 30px;
+      letter-spacing: 0.2px;
+      margin-left: 6px;
+      backdrop-filter: blur(2px);
+    }
+
+    .header-badge {
+      background-color: #2e2e2e;
+      color: #ffcfb0;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+
+    .header-badge i {
+      font-size: 12px;
+      color: #ff9f5b;
+    }
+
+    /* search / filter row — Jumia quick job search */
+    .search-section {
+      padding: 18px 24px 8px 24px;
+      background: white;
+      border-bottom: 1px solid #f0f2f5;
+    }
+
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+      background: #f7f9fc;
+      border-radius: 60px;
+      padding: 2px 2px 2px 18px;
+      border: 1px solid #e6e9f0;
+      transition: all 0.18s;
+    }
+
+    .search-wrapper:focus-within {
+      border-color: #fe6a00;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(254, 106, 0, 0.1);
+    }
+
+    .search-wrapper i {
+      color: #9aa6b8;
+      font-size: 16px;
+    }
+
+    .search-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 14px 12px;
+      font-size: 0.95rem;
+      outline: none;
+      color: #1f2937;
+    }
+
+    .search-wrapper input::placeholder {
+      color: #9aa6b8;
+      font-weight: 400;
+    }
+
+    .search-wrapper button {
+      background: #fe6a00;
+      border: none;
+      border-radius: 60px;
+      padding: 12px 22px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: default;
+      transition: background 0.15s;
+      letter-spacing: 0.2px;
+      box-shadow: 0 4px 8px -2px rgba(254, 106, 0, 0.3);
+    }
+
+    .search-wrapper button i {
+      color: white;
+      font-size: 14px;
+    }
+
+    /* category pills — supermarket vibe */
+    .category-scroll {
+      display: flex;
+      gap: 10px;
+      padding: 16px 24px 12px 24px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      border-bottom: 1px solid #f0f2f5;
+      background: white;
+    }
+
+    .category-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-pill {
+      background: #f2f4f8;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #2e3a4b;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      cursor: default;
+    }
+
+    .cat-pill i {
+      font-size: 13px;
+      color: #fe6a00;
+      opacity: 0.8;
+    }
+
+    .cat-pill.active {
+      background: #fe6a00;
+      color: white;
+      border-color: #fe6a00;
+      box-shadow: 0 6px 12px -6px rgba(254, 106, 0, 0.4);
+    }
+
+    .cat-pill.active i {
+      color: white;
+      opacity: 1;
+    }
+
+    .cat-pill:hover:not(.active) {
+      background: #e9ecf2;
+      border-color: #d0d7e2;
+    }
+
+    /* job list header */
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px 8px 24px;
+      background: white;
+    }
+
+    .list-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #101828;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .list-header h2 i {
+      color: #fe6a00;
+      font-size: 14px;
+    }
+
+    .list-header .count {
+      font-size: 0.75rem;
+      background: #f2f4f8;
+      color: #475467;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+
+    /* jobs list */
+    .jobs-list {
+      padding: 0 18px 8px 18px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .job-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 16px 16px 18px;
+      border-radius: 18px;
+      transition: all 0.15s;
+      cursor: default;
+      background: white;
+      border: 1px solid transparent;
+      margin-bottom: 2px;
+    }
+
+    .job-item:hover {
+      background: #fefaf6;
+      border-color: #ffe4d0;
+      box-shadow: 0 6px 14px -8px rgba(254, 106, 0, 0.15);
+    }
+
+    .job-icon {
+      width: 48px;
+      height: 48px;
+      background: #fff2e8;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .job-icon i {
+      font-size: 22px;
+      color: #fe6a00;
+    }
+
+    .job-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .job-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+
+    .job-title h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e293b;
+      letter-spacing: -0.2px;
+    }
+
+    .job-tag {
+      background: #eaf6ef;
+      color: #0e7b3e;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 40px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border: 1px solid #b8e6cc;
+    }
+
+    .job-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.78rem;
+      color: #5a6b7e;
+    }
+
+    .job-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .job-meta i {
+      font-size: 11px;
+      color: #99a9bb;
+      width: 14px;
+    }
+
+    .salary {
+      color: #0e7b3e;
+      font-weight: 600;
+      background: #f0f9f0;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+    }
+
+    .arrow-icon {
+      color: #cbd5e1;
+      font-size: 14px;
+      margin-left: 8px;
+      transition: transform 0.15s;
+    }
+
+    .job-item:hover .arrow-icon {
+      color: #fe6a00;
+      transform: translateX(3px);
+    }
+
+    /* footer — jumia supermarket jobs branding */
+    .menu-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px 20px 24px;
+      background: #ffffff;
+      border-top: 1px solid #edf2f7;
+      margin-top: 4px;
+    }
+
+    .footer-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: #7b8b9f;
+    }
+
+    .footer-note i {
+      color: #fe6a00;
+      font-size: 12px;
+    }
+
+    .view-all {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fe6a00;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff4ec;
+      padding: 8px 16px;
+      border-radius: 40px;
+      transition: background 0.15s;
+      cursor: default;
+      letter-spacing: 0.2px;
+    }
+
+    .view-all i {
+      font-size: 11px;
+    }
+
+    .view-all:hover {
+      background: #ffe8d9;
+    }
+
+    /* micro spacing & extra polish */
+    .divider-dot {
+      width: 3px;
+      height: 3px;
+      background: #ccd7e6;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 0 2px;
+    }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .menu-header {
+        padding: 18px 20px 14px 20px;
+      }
+      .search-section {
+        padding: 16px 18px 6px 18px;
+      }
+      .category-scroll {
+        padding: 14px 18px 10px 18px;
+      }
+      .list-header {
+        padding: 16px 18px 6px 18px;
+      }
+      .jobs-list {
+        padding: 0 12px 6px 12px;
+      }
+      .job-item {
+        padding: 14px 12px 14px 14px;
+      }
+      .job-icon {
+        width: 42px;
+        height: 42px;
+        margin-right: 12px;
+      }
+      .job-icon i {
+        font-size: 18px;
+      }
+      .job-title h3 {
+        font-size: 0.92rem;
+      }
+      .search-wrapper button span {
+        display: none;
+      }
+      .search-wrapper button {
+        padding: 12px 16px;
+      }
+      .search-wrapper button i {
+        font-size: 16px;
+        margin: 0;
+      }
+      .header-left h1 {
+        font-size: 1.4rem;
+      }
+      .header-left h1 span {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+      }
+      .menu-footer {
+        padding: 16px 18px 18px 18px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .job-meta {
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="jumia-menu">
+
+  <!-- orange header, Jumia supermarket jobs -->
+  <div class="menu-header">
+    <div class="header-left">
+      <i class="fas fa-store"></i>
+      <h1>Supermarket <span>Jobs</span></h1>
+    </div>
+    <div class="header-badge">
+      <i class="fas fa-bolt"></i> 24 open
+    </div>
+  </div>
+
+  <!-- quick search — hiring near you -->
+  <div class="search-section">
+    <div class="search-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search supermarket jobs (cashier, stocker...)" value="supermarket" readonly>
+      <button>
+        <i class="fas fa-filter"></i>
+        <span>Filter</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- scrollable categories (supermarket departments) -->
+  <div class="category-scroll">
+    <div class="cat-pill active">
+      <i class="fas fa-clipboard-list"></i> All jobs
+    </div>
+    <div class="cat-pill">
+      <i class="fas fa-cash-register"></i> Cashier
+    </div>
+    <div class="cat-pill">
+      <i class="fas fa-boxes"></i> Stocker
+    </div>
+    <div class="cat-pill">
+      <i class="fas fa-truck"></i> Delivery
+    </div>
+    <div class="cat-pill">
+      <i class="fas fa-user-tie"></i> Supervisor
+    </div>
+    <div class="cat-pill">
+      <i class="fas fa-broom"></i> Sanitation
+    </div>
+  </div>
+
+  <!-- list header with open positions -->
+  <div class="list-header">
+    <h2><i class="fas fa-briefcase"></i> Recommended for you</h2>
+    <span class="count">8 jobs</span>
+  </div>
+
+  <!-- supermarket job listings (Jumia style) -->
+  <div class="jobs-list">
+
+    <!-- job 1 -->
+    <div class="job-item">
+      <div class="job-icon">
+        <i class="fas fa-cash-register"></i>
+      </div>
+      <div class="job-details">
+        <div class="job-title">
+          <h3>Cashier – Supermarket</h3>
+          <span class="job-tag">Full-time</span>
+        </div>
+        <div class="job-meta">
+          <span><i class="fas fa-map-pin"></i> Lagos, Ikeja</span>
+          <span><i class="fas fa-clock"></i> 8h shift</span>
+          <span class="salary">₦120k / mo</span>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right arrow-icon"></i>
+    </div>
+
+    <!-- job 2 -->
+    <div class="job-item">
+      <div class="job-icon">
+        <i class="fas fa-boxes"></i>
+      </div>
+      <div class="job-details">
+        <div class="job-title">
+          <h3>Stock Associate</h3>
+          <span class="job-tag">Urgent</span>
+        </div>
+        <div class="job-meta">
+          <span><i class="fas fa-map-pin"></i> Abuja, Wuse</span>
+          <span><i class="fas fa-clock"></i> Morning shift</span>
+          <span class="salary">₦95k / mo</span>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right arrow-icon"></i>
+    </div>
+
+    <!-- job 3 -->
+    <div class="job-item">
+      <div class="job-icon">
+        <i class="fas fa-truck"></i>
+      </div>
+      <div class="job-details">
+        <div class="job-title">
+          <h3>Delivery Driver (Van)</h3>
+          <span class="job-tag">Contract</span>
+        </div>
+        <div class="job-meta">
+          <span><i class="fas fa-map-pin"></i> Port Harcourt</span>
+          <span><i class="fas fa-clock"></i> Flexible</span>
+          <span class="salary">₦150k / mo</span>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right arrow-icon"></i>
+    </div>
+
+    <!-- job 4 -->
+    <div class="job-item">
+      <div class="job-icon">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div class="job-details">
+        <div class="job-title">
+          <h3>Floor Supervisor</h3>
+          <span class="job-tag">Full-time</span>
+        </div>
+        <div class="job-meta">
+          <span><i class="fas fa-map-pin"></i> Ibadan, Ring Road</span>
+          <span><i class="fas fa-clock"></i> Rotating</span>
+          <span class="salary">₦180k / mo</span>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right arrow-icon"></i>
+    </div>
+
+    <!-- job 5 -->
+    <div class="job-item">
+      <div class="job-icon">
+        <i class="fas fa-broom"></i>
+      </div>
+      <div class="job-details">
+        <div class="job-title">
+          <h3>Sanitation Attendant</h3>
+          <span class="job-tag">Part-time</span>
+        </div>
+        <div class="job-meta">
+          <span><i class="fas fa-map-pin"></i> Lekki, Lagos</span>
+          <span><i class="fas fa-clock"></i> Evening</span>
+          <span class="salary">₦65k / mo</span>
+        </div>
+      </div>
+      <i class="fas fa-chevron-right arrow-icon"></i>
+    </div>
+  </div>
+
+  <!-- footer with view all -->
+  <div class="menu-footer">
+    <div class="footer-note">
+      <i class="fas fa-shield-alt"></i> Jumia verified supermarket jobs
+    </div>
+    <div class="view-all">
+      View all <i class="fas fa-arrow-right"></i>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+```
+
+Interactive Job Search & Filtering
+
+You can quickly narrow down job listings using the search bar and category filters. The interface is designed to feel familiar and efficient.
+
+· Search Bar: The prominent search field lets you type keywords like "cashier" or "stocker" to find relevant positions. The filter button beside it suggests further refinement options.
+· Category Pills: A horizontal scroll of department tags (All jobs, Cashier, Stocker, etc.) lets you instantly filter the list by job type. The active filter is highlighted in orange.
+· Job Cards: Each listing shows the role, location, shift type, and salary. Hovering over a card reveals a subtle highlight and an arrow, indicating it's clickable for more details.
+· Job Count & Footer: The header shows the number of open positions, and the footer reinforces that the listings are verified, building trust.
+
+---
+
+Optimization Tip: You can replace the sample job listings and their details in the .jobs-list section with your own data. The category pills in .category-scroll can also be customized to match your specific job departments.
